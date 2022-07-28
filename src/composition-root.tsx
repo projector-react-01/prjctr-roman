@@ -13,13 +13,14 @@ import type { FilterResultService } from "./services/filterResult";
 import Filter from "./services/filter";
 import type { FilterService } from "./services/filter";
 
+import { createLibraryViewModel } from "./components/VideoLibrary/Library";
 import { createFilterViewModel } from "./components/VideoLibrary/Filter";
 import { createVideoViewModel } from "./components/VideoLibrary/Video";
 
 import { TYPES } from "./constants";
 
 export default function createCompositionRoot (container: interfaces.Container) {
-    container.bind(TYPES.filterViewModel).toDynamicValue(() => createAxiosInstance())
+    container.bind(TYPES.axiosInstance).toDynamicValue(() => createAxiosInstance())
     container.bind<IApiService>(TYPES.apiService).to(ApiService)
 
     container.bind<FilterParamsService>(TYPES.filterParams).to(FilterParams).inSingletonScope()
@@ -29,5 +30,6 @@ export default function createCompositionRoot (container: interfaces.Container) 
     container.bind(TYPES.videoViewModel).toDynamicValue(({ container }) => createVideoViewModel(container.get(TYPES.filterResult)))
 
     container.bind<FilterService>(TYPES.filterService).to(Filter)
+    container.bind(TYPES.libraryViewModel).toDynamicValue(({ container }) => createLibraryViewModel(container.get(TYPES.filterService)))
     return container
 }
