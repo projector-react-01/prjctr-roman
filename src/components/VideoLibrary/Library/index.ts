@@ -1,5 +1,4 @@
-import React from "react";
-import { Dependence, diInject } from "../../HOC";
+import { connect } from "../../HOC/Injector";
 
 import { TYPES } from "../../../constants";
 import { LibraryWrapper } from "./LibraryView";
@@ -16,8 +15,4 @@ export const createLibraryViewModel = (filterService: FilterService) => {
     }
 }
 
-const LibraryInjected = diInject(LibraryWrapper, {
-    libraryViewModel: new Dependence(TYPES.filterService)
-})
-
-export const Library = () => <LibraryInjected />
+export const Library = connect(LibraryWrapper, TYPES.filterService)

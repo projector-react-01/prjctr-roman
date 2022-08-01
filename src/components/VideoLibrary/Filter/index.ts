@@ -1,4 +1,4 @@
-import { Dependence, diInject } from "../../HOC";
+import { connect } from "../../HOC/Injector";
 import { FilterView } from './FilterView'
 import { TYPES } from "../../../constants";
 import { Category, Direction, Format, Level } from "../../../types/filter";
@@ -44,6 +44,4 @@ export const createFilterViewModel = (
     }
 }
 
-export const Filter = diInject(FilterView, {
-    filterViewModel: new Dependence(TYPES.filterViewModel)
-})
+export const Filter = connect(FilterView, TYPES.filterViewModel)
