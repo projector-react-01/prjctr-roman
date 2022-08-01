@@ -1,6 +1,4 @@
-import React from "react";
-
-import { Dependence, diInject } from "../../HOC";
+import { connect } from "../../HOC/Injector";
 import { TYPES } from "../../../constants";
 
 import { VideoView } from "./VideoView";
@@ -26,8 +24,4 @@ export const createVideoViewModel = (filterResult: FilterResultService) => {
     }
 }
 
-const VideoInjected = diInject(VideoView, {
-    videoViewModel: new Dependence(TYPES.videoViewModel)
-})
-
-export const Video = () => <VideoInjected />
+export const Video = connect(VideoView, TYPES.videoViewModel)

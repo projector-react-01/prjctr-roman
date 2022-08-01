@@ -4,21 +4,20 @@ import { useUIList } from "../../../contexts/lists";
 import { FilterSelector } from "../FilterSelector";
 
 type FilterViewProps = {
-    filterViewModel: {
-        category: string
-        direction: string
-        format: string
-        level: string
+    category: string
+    direction: string
+    format: string
+    level: string
 
-        onCategoryChange: (payload: string) => void,
-        onDirectionChange: (payload: string) => void,
-        onFormatChange: (payload: string) => void,
-        onLevelChange: (payload: string) => void
-    }
+    onCategoryChange: (payload: string) => void,
+    onDirectionChange: (payload: string) => void,
+    onFormatChange: (payload: string) => void,
+    onLevelChange: (payload: string) => void
 }
 
-export const FilterView = ({ filterViewModel }: FilterViewProps) => {
+export const FilterView = (filterViewModel: FilterViewProps) => {
     const { categories, directions, formats, levels } = useUIList()
+
     const {
         category,
         direction,

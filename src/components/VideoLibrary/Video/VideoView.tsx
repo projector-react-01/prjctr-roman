@@ -1,15 +1,13 @@
 import React from "react";
 
 interface VideoViewProps {
-    videoViewModel: {
-        result: {
-            data: string[]
-            totalCount: number
-        }
+    result: {
+        data: string[]
+        totalCount: number
     }
 }
 
-export const VideoView = ({ videoViewModel }: VideoViewProps) => {
+export const VideoView = (videoViewModel: VideoViewProps) => {
     const { result } = videoViewModel
     return (
         <div>
