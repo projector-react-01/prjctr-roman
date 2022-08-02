@@ -1,25 +1,28 @@
 import React  from "react";
 
-interface RegistrationProps {
+interface AuthViewProps {
+    isLoggedIn: boolean,
     username: string;
     password: string;
+    setUsername: (prop: string) => void,
+    setPassword: (prop: string) => void,
+    login: () => void
 }
 
-interface AuthViewProps {
-    authViewModel: {
-        isLoggedIn: boolean,
-        login: (props: RegistrationProps) => Promise<void>,
-    }
-}
-
-export const AuthWrapper = ({ authViewModel }: AuthViewProps) => {
-    const login = () => {
-        authViewModel.login({ username: 'romantest', password: 'romatest' })
-    }
-
+export const AuthWrapper = ({ isLoggedIn, username, password, setUsername, setPassword, login }: AuthViewProps) => {
     return (
         <>
-            <h1>isLoggedIn: {authViewModel.isLoggedIn ? 'Authenticated' : 'Unauthenticated'}</h1>
+            <h1>isLoggedIn: {isLoggedIn ? 'Authenticated' : 'Unauthenticated'}</h1>
+            <input
+                value={username}
+                type="text"
+                onInput={(e) => setUsername((e.target as HTMLInputElement).value)}
+            />
+            <input
+                value={password}
+                type="password"
+                onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
+            />
             <button onClick={login}>doLogin</button>
         </>
     );
