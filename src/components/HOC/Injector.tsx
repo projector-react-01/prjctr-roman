@@ -21,14 +21,15 @@ export type ComposeFunctionOutput<VP extends {}> = {
     readonly actions: FunctionProperties<VP>;
 };
 
-export type ComposeFunction<P extends {}, VP extends {}> = (
-    props: P
+export type ComposeFunction<P extends {}, VP extends {}, VM = {}> = (
+    props: P,
+    viewModelProps: VM,
 ) => ComposeFunctionOutput<VP>;
 
 export function connect<P extends {}, VP extends {}, VM = {}>(
-    view: React.FC<VP>,
+    view: React.FC<VP & VM>,
     dependencyName: interfaces.ServiceIdentifier<VM>,
-    composeFunction?: ComposeFunction<P, VP>
+    composeFunction?: ComposeFunction<P, VP, VM>
 ): React.FC<P> {
     return observer((props) => {
         const container = useContext(Context)
@@ -38,16 +39,22 @@ export function connect<P extends {}, VP extends {}, VM = {}>(
         const viewModelProps: VM = container.get(dependencyName)
 
         if (typeof composeFunction !== 'function') {
-            return view(viewModelProps)
+            const nextState = {
+                ...props as unknown as VP,
+                ...viewModelProps
+            } as VP & VM;
+
+            return view(nextState)
         }
 
         const [{ props: viewProps, actions }] = useState(() =>
-            composeFunction(props)
+            composeFunction(props, viewModelProps)
         );
         const [state] = useState(() => viewProps);
 
         const nextState = {
             ...state,
+            ...viewModelProps,
             ...actions
         } as VP & VM;
 
