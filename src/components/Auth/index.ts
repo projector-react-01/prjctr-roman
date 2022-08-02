@@ -43,7 +43,7 @@ export const createAuthViewModel = (
 
 type Props = {};
 
-export type ViewProps = {
+type AuthViewProps = {
     readonly username: string;
     readonly password: string;
     readonly setUsername: (prop: string) => void;
@@ -51,7 +51,11 @@ export type ViewProps = {
     readonly login: () => void
 };
 
-function composeAppStreams(): ComposeFunction<Props, ViewProps, AuthViewModelFactory> {
+type AuthViewModel = {
+    isLoggedIn: boolean;
+}
+
+function composeAppStreams(): ComposeFunction<Props, AuthViewProps, AuthViewModelFactory> {
     return (_, authViewModel) => {
         const state = observable({
             username: '',
@@ -80,7 +84,7 @@ function composeAppStreams(): ComposeFunction<Props, ViewProps, AuthViewModelFac
     };
 }
 
-const Auth = connect(AuthWrapper, TYPES.authViewModel, composeAppStreams())
+const Auth = connect<Props, AuthViewProps, AuthViewModel>(AuthWrapper, TYPES.authViewModel, composeAppStreams())
 export {
     Auth
 }

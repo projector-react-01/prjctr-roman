@@ -21,12 +21,12 @@ export type ComposeFunctionOutput<VP extends {}> = {
     readonly actions: FunctionProperties<VP>;
 };
 
-export type ComposeFunction<P extends {}, VP extends {}, VM = {}> = (
+export type ComposeFunction<P extends {}, VP extends {}, VM extends {}> = (
     props: P,
     viewModelProps: VM,
 ) => ComposeFunctionOutput<VP>;
 
-export function connect<P extends {}, VP extends {}, VM = {}>(
+export function connect<P extends {}, VP extends {}, VM extends {}>(
     view: React.FC<VP & VM>,
     dependencyName: interfaces.ServiceIdentifier<VM>,
     composeFunction?: ComposeFunction<P, VP, VM>
@@ -42,7 +42,7 @@ export function connect<P extends {}, VP extends {}, VM = {}>(
             const nextState = {
                 ...props as unknown as VP,
                 ...viewModelProps
-            } as VP & VM;
+            }
 
             return view(nextState)
         }

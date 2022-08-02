@@ -12,6 +12,8 @@ export interface FilterParamsProps {
     readonly page: number
 }
 
+type Props = {}
+
 export interface FilterParamsState {
     state: FilterParamsProps
 }
@@ -27,6 +29,20 @@ export interface FilterParamsActions {
 }
 
 export type FilterParamsService = FilterParamsState & FilterParamsActions
+
+type FilterViewProps = {}
+
+type FilterViewModel = {
+    category: string
+    direction: string
+    format: string
+    level: string
+
+    onCategoryChange: (payload: string) => void,
+    onDirectionChange: (payload: string) => void,
+    onFormatChange: (payload: string) => void,
+    onLevelChange: (payload: string) => void
+}
 
 export const createFilterViewModel = (
     filterParamsState: FilterParamsService,
@@ -44,4 +60,4 @@ export const createFilterViewModel = (
     }
 }
 
-export const Filter = connect(FilterView, TYPES.filterViewModel)
+export const Filter = connect<Props, FilterViewProps, FilterViewModel>(FilterView, TYPES.filterViewModel)

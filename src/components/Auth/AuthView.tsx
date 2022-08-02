@@ -1,15 +1,18 @@
 import React  from "react";
 
-interface AuthViewProps {
-    isLoggedIn: boolean,
-    username: string;
-    password: string;
-    setUsername: (prop: string) => void,
-    setPassword: (prop: string) => void,
-    login: () => void
+type AuthViewProps = {
+    readonly username: string;
+    readonly password: string;
+    readonly setUsername: (prop: string) => void;
+    readonly setPassword: (prop: string) => void;
+    readonly login: () => void
+};
+
+type AuthViewModel = {
+    isLoggedIn: boolean;
 }
 
-export const AuthWrapper = ({ isLoggedIn, username, password, setUsername, setPassword, login }: AuthViewProps) => {
+export const AuthWrapper = ({ isLoggedIn, username, password, setUsername, setPassword, login }: AuthViewProps & AuthViewModel) => {
     return (
         <>
             <h1>isLoggedIn: {isLoggedIn ? 'Authenticated' : 'Unauthenticated'}</h1>
