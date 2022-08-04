@@ -21,42 +21,30 @@ export type ComposeFunctionOutput<VP extends {}> = {
     readonly actions: FunctionProperties<VP>;
 };
 
-export type ComposeFunction<P extends {}, VP extends {}, VM extends {}> = (
-    props: P,
-    viewModelProps: VM,
+export type ComposeFunction<P extends {}, VP extends {}> = (
+    props: P
 ) => ComposeFunctionOutput<VP>;
 
-export function connect<P extends {}, VP extends {}, VM extends {}>(
-    view: React.FC<VP & VM>,
-    dependencyName: interfaces.ServiceIdentifier<VM>,
-    composeFunction?: ComposeFunction<P, VP, VM>
+export function connect<P extends {}, VP extends {}>(
+    view: React.FC<VP>,
+    dependencyName: interfaces.ServiceIdentifier
 ): React.FC<P> {
     return observer((props) => {
         const container = useContext(Context)
         if (!container) {
             throw Error('application must be wrapped with DI container')
         }
-        const viewModelProps: VM = container.get(dependencyName)
-
-        if (typeof composeFunction !== 'function') {
-            const nextState = {
-                ...props as unknown as VP,
-                ...viewModelProps
-            }
-
-            return view(nextState)
-        }
+        const [viewModel] = useState(() => container.get(dependencyName))
 
         const [{ props: viewProps, actions }] = useState(() =>
-            composeFunction(props, viewModelProps)
+            viewModel(props)
         );
         const [state] = useState(() => viewProps);
 
         const nextState = {
             ...state,
-            ...viewModelProps,
             ...actions
-        } as VP & VM;
+        } as VP;
 
         return view(nextState);
     });

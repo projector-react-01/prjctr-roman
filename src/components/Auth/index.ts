@@ -1,7 +1,7 @@
 import { ComposeFunction, connect } from "../HOC/Injector";
 
 import { TYPES } from "../../constants";
-import { AuthWrapper } from "./AuthView";
+import { AuthViewProps, AuthWrapper } from "./AuthView";
 import { Account } from "../../services/auth/account";
 import { action, observable } from "mobx";
 
@@ -26,40 +26,18 @@ interface SignInService {
     login: (props: RegistrationProps) => Promise<void>
 }
 
-interface AuthViewModelFactory {
-    isLoggedIn: boolean,
-    login: (props: RegistrationProps) => Promise<void>
-}
-
-export const createAuthViewModel = (
-    accountService: AccountService,
-    signInService: SignInService
-) => {
-    return {
-        isLoggedIn: accountService.state.isLoggedIn,
-        login: signInService.login.bind(signInService)
-    }
-}
-
 type Props = {};
 
-type AuthViewProps = {
-    readonly username: string;
-    readonly password: string;
-    readonly setUsername: (prop: string) => void;
-    readonly setPassword: (prop: string) => void;
-    readonly login: () => void
-};
+export function composeAuthViewModel(
+    accountService: AccountService,
+    signInService: SignInService
+): ComposeFunction<Props, AuthViewProps> {
+    return (_) => {
 
-type AuthViewModel = {
-    isLoggedIn: boolean;
-}
-
-function composeAppStreams(): ComposeFunction<Props, AuthViewProps, AuthViewModelFactory> {
-    return (_, authViewModel) => {
         const state = observable({
             username: '',
             password: '',
+            isLoggedIn: accountService.state.isLoggedIn,
         });
 
         const setUsername = action((prop: string) => {
@@ -70,7 +48,7 @@ function composeAppStreams(): ComposeFunction<Props, AuthViewProps, AuthViewMode
         });
 
         const login = action(() => {
-            authViewModel.login({ username: state.username, password: state.password })
+            signInService.login({ username: state.username, password: state.password })
         })
 
         return {
@@ -84,7 +62,7 @@ function composeAppStreams(): ComposeFunction<Props, AuthViewProps, AuthViewMode
     };
 }
 
-const Auth = connect<Props, AuthViewProps, AuthViewModel>(AuthWrapper, TYPES.authViewModel, composeAppStreams())
+const Auth = connect<Props, AuthViewProps>(AuthWrapper, TYPES.authViewModel)
 export {
     Auth
 }
