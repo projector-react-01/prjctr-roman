@@ -9,7 +9,8 @@ export type AuthViewProps = {
     readonly isLoggedIn: boolean;
 };
 
-export const AuthWrapper = ({ isLoggedIn, username, password, setUsername, setPassword, login }: AuthViewProps & AuthViewModel) => {
+export const AuthWrapper = ({ isLoggedIn, username, password, setUsername, setPassword, login }: AuthViewProps) => {
+
     return (
         <>
             <h1>isLoggedIn: {isLoggedIn ? 'Authenticated' : 'Unauthenticated'}</h1>

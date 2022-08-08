@@ -22,10 +22,10 @@ import type { FilterResultService } from "./services/filterResult";
 import Filter from "./services/filter";
 import type { FilterService } from "./services/filter";
 
-import { createLibraryViewModel } from "./components/VideoLibrary/Library";
-import { createFilterViewModel } from "./components/VideoLibrary/Filter";
-import { createVideoViewModel } from "./components/VideoLibrary/Video";
-import { composeAuthViewModel, createAuthViewModel } from "./components/Auth";
+import { composeLibraryViewModel } from "./components/VideoLibrary/Library";
+import { composeFilterViewModel } from "./components/VideoLibrary/Filter";
+import { composeVideoViewModel } from "./components/VideoLibrary/Video";
+import { composeAuthViewModel } from "./components/Auth";
 
 import { TYPES } from "./constants";
 
@@ -42,12 +42,12 @@ export default function createCompositionRoot (container: interfaces.Container) 
     container.bind(TYPES.authViewModel).toDynamicValue(({ container }) => composeAuthViewModel(container.get(TYPES.accountService), container.get(TYPES.signInService)))
 
     container.bind<FilterParamsService>(TYPES.filterParams).to(FilterParams).inSingletonScope()
-    container.bind(TYPES.filterViewModel).toDynamicValue(({ container }) => createFilterViewModel(container.get(TYPES.filterParams)))
+    container.bind(TYPES.filterViewModel).toDynamicValue(({ container }) => composeFilterViewModel(container.get(TYPES.filterParams)))
 
     container.bind<FilterResultService>(TYPES.filterResult).to(FilterResult).inSingletonScope()
-    container.bind(TYPES.videoViewModel).toDynamicValue(({ container }) => createVideoViewModel(container.get(TYPES.filterResult)))
+    container.bind(TYPES.videoViewModel).toDynamicValue(({ container }) => composeVideoViewModel(container.get(TYPES.filterResult)))
 
     container.bind<FilterService>(TYPES.filterService).to(Filter).inSingletonScope()
-    container.bind(TYPES.libraryViewModel).toDynamicValue(({ container }) => createLibraryViewModel(container.get(TYPES.filterService)))
+    container.bind(TYPES.libraryViewModel).toDynamicValue(({ container }) => composeLibraryViewModel(container.get(TYPES.filterService)))
     return container
 }

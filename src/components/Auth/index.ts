@@ -4,18 +4,15 @@ import { TYPES } from "../../constants";
 import { AuthViewProps, AuthWrapper } from "./AuthView";
 import { Account } from "../../services/auth/account";
 import { action, observable } from "mobx";
+import { useDependency } from "../../hooks/useDependency";
 
-type AccountState = {
+type AccountService = {
     readonly isLoggedIn: false;
 } |
     {
         readonly isLoggedIn: true;
         readonly account: Account;
     }
-
-interface AccountService {
-    state: AccountState
-}
 
 interface RegistrationProps {
     username: string;
@@ -32,12 +29,11 @@ export function composeAuthViewModel(
     accountService: AccountService,
     signInService: SignInService
 ): ComposeFunction<Props, AuthViewProps> {
-    return (_) => {
-
+    return () => {
         const state = observable({
             username: '',
             password: '',
-            isLoggedIn: accountService.state.isLoggedIn,
+            isLoggedIn: accountService.isLoggedIn,
         });
 
         const setUsername = action((prop: string) => {
@@ -62,7 +58,7 @@ export function composeAuthViewModel(
     };
 }
 
-const Auth = connect<Props, AuthViewProps>(AuthWrapper, TYPES.authViewModel)
+const Auth = connect<Props, AuthViewProps>(AuthWrapper, () => useDependency(TYPES.authViewModel))
 export {
     Auth
 }

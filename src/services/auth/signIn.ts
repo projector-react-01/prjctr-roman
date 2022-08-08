@@ -30,12 +30,12 @@ export class SignInService implements ISignInService {
         await this.authService.login(props)
 
         const account = await this.accountService.fetchAccount()
-        this.accountService.setState({ isLoggedIn: true, account})
+        this.accountService.setAccount(account)
     }
 
     async logout (): Promise<void> {
         await this.authService.logout()
-        this.accountService.setState({ isLoggedIn: false })
+        this.accountService.setAccount(null)
 
     }
 }

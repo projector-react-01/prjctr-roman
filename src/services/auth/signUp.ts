@@ -30,7 +30,7 @@ export class SignUpService implements ISignUpService {
     async register (props: RegistrationProps): Promise<void> {
         const account = await this.authService.register(props)
         if (account) {
-            this.accountService.setState({ isLoggedIn: true, account })
+            this.accountService.setAccount(account)
         }
     }
 }

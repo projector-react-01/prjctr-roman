@@ -1,11 +1,12 @@
 import React from 'react';
 import { Container } from 'inversify'
 import createCompositionRoot from './composition-root'
-import { Library } from "./components/VideoLibrary/Library";
 import { ListsProvider } from "./contexts/lists";
 
 import withProvider from './components/HOC/Provider';
+
 import { Auth } from "./components/Auth";
+import { Library } from "./components/VideoLibrary/Library";
 
 const App: React.FC = () => {
     return (

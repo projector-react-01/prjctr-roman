@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../constants";
 import { IApiService } from "../api/api";
-import { makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 
 export interface Account {
     readonly id: string;
@@ -13,34 +13,29 @@ export interface Account {
     readonly subscribeExpireDate: Date | null;
 }
 
-type AccountState = {
-    readonly isLoggedIn: false;
-} |
-    {
-        readonly isLoggedIn: true;
-        readonly account: Account;
-    }
-
 export interface IAccountService {
-    state: AccountState
+    state: Account | null;
+    isLoggedIn: boolean;
+
     apiService: IApiService
 
     init: () => Promise<void>
     getAccount: () => Account | null
-    setState: (state: AccountState) => void
+    setAccount: (state: Account | null) => void
     fetchAccount: () => Promise<Account>
 }
 
 @injectable()
 export class AccountService implements IAccountService {
-    state: AccountState = { isLoggedIn: false }
+    state: Account | null = null
     apiService: IApiService
 
     constructor(
         @inject(TYPES.apiService) apiService: IApiService
     ) {
         makeObservable(this, {
-            state: observable
+            state: observable,
+            isLoggedIn: computed,
         })
         this.apiService = apiService
         this.init()
@@ -48,14 +43,18 @@ export class AccountService implements IAccountService {
 
     async init () {
         const account = await this.fetchAccount()
-        this.setState({ isLoggedIn: true, account})
+        this.setAccount(account)
+    }
+
+    get isLoggedIn () {
+        return this.state !== null
     }
 
     getAccount () {
-        return this.state.isLoggedIn ? this.state?.account : null
+        return this.isLoggedIn ? this.state : null
     }
 
-    setState (state: AccountState) {
+    setAccount (state: Account | null) {
         this.state = state
     }
 
