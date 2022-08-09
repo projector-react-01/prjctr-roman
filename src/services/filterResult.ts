@@ -2,8 +2,8 @@ import { injectable } from "inversify";
 import { makeObservable, observable } from "mobx";
 
 export interface SearchResult {
-    readonly data: string[]
-    readonly totalCount: number
+    data: string[]
+    totalCount: number
 }
 
 export interface FilterResultState {
@@ -30,7 +30,8 @@ export default class FilterResult implements FilterResultService {
     }
 
     setResult = (result: SearchResult) => {
-        this.result = result
+        this.result.data = result.data
+        this.result.totalCount = result.totalCount
     };
 
     reset = () => {

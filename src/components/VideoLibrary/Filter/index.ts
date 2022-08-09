@@ -35,12 +35,7 @@ type Props = {}
 export function composeFilterViewModel(filterParamsState: FilterParamsService,): ComposeFunction<Props, FilterViewProps> {
     return () => {
         const { state } = filterParamsState
-        const observableProps = observable({
-            category: state.category,
-            direction: state.direction,
-            format: state.format,
-            level: state.level,
-        });
+        const observableProps = state;
 
         const onCategoryChange = action((e: string) => filterParamsState.setCategory(e))
         const onDirectionChange = action((e: string) => filterParamsState.setDirection(e))

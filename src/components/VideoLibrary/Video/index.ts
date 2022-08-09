@@ -24,12 +24,8 @@ type Props = {}
 
 export function composeVideoViewModel(filterResult: FilterResultService): ComposeFunction<Props, VideoViewProps> {
     return () => {
-        const state = observable({
-            data: filterResult.result.data
-        });
-
         return {
-            props: state,
+            props: filterResult.result,
             actions: {}
         };
     };
