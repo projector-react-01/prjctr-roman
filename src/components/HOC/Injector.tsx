@@ -25,11 +25,12 @@ export type ComposeFunction<P extends {}, VP extends {}> = (
 
 export function connect<P extends {}, VP extends {}>(
     view: React.FC<VP>,
-    viewModel: () => (props: P) => ComposeFunctionOutput<VP>
+    viewModelProvider: () => (props: P) => ComposeFunctionOutput<VP>
 ): React.FC<P> {
     return observer((props) => {
+        const dependency = viewModelProvider()
         const [{ props: viewProps, actions }] = useState(() =>
-            viewModel()(props)
+            dependency(props)
         );
         const [state] = useState(() => viewProps);
 
