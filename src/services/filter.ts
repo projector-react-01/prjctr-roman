@@ -31,7 +31,7 @@ export default class Filter implements FilterService, Disposable {
         this.filterParamsState = filterParamsState
         this.filterResultActions = filterResultActions
 
-        this.disposer = observe(filterParamsState, 'state', () => {
+        this.disposer = observe(filterParamsState.state,  () => {
             this.filter()
         })
     }
