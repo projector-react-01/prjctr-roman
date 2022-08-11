@@ -1,6 +1,5 @@
-import React  from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { useState } from "react";
 
 type NonFunctionPropertyNames<T> = {
     [K in keyof T]: T[K] extends Function ? never : K;

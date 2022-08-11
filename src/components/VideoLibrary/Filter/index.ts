@@ -3,7 +3,7 @@ import { FilterView, FilterViewProps } from "./FilterView";
 import { TYPES } from "../../../constants";
 import { Category, Direction, Format, Level } from "../../../types/filter";
 import { useDependency } from "../../../hooks/useDependency";
-import { action, observable } from "mobx";
+import { action } from "mobx";
 
 export interface FilterParamsProps {
     readonly category: Category,
@@ -35,7 +35,6 @@ type Props = {}
 export function composeFilterViewModel(filterParamsState: FilterParamsService,): ComposeFunction<Props, FilterViewProps> {
     return () => {
         const { state } = filterParamsState
-        const observableProps = state;
 
         const onCategoryChange = action((e: string) => filterParamsState.setCategory(e))
         const onDirectionChange = action((e: string) => filterParamsState.setDirection(e))
@@ -43,7 +42,7 @@ export function composeFilterViewModel(filterParamsState: FilterParamsService,):
         const onLevelChange = action((e: string) => filterParamsState.setLevel(e))
 
         return {
-            props: observableProps,
+            props: filterParamsState.state,
             actions: {
                 onCategoryChange,
                 onDirectionChange,
