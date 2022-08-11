@@ -1,6 +1,11 @@
 export const TYPES = {
     axiosInstance: Symbol.for('axiosInstanceKey'),
     apiService: Symbol.for('apiServiceKey'),
+    signInService: Symbol.for('signInServiceKey'),
+    signUpService: Symbol.for('signUpServiceKey'),
+    authService: Symbol.for('authServiceKey'),
+    authViewModel: Symbol.for('authViewModelKey'),
+    accountService: Symbol.for('accountServiceKey'),
     filterParams: Symbol.for('filterParamsKey'),
     filterResult: Symbol.for('filterResultKey'),
     filterService: Symbol.for('filterServiceKey'),

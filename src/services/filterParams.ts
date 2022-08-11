@@ -3,12 +3,12 @@ import { Category, Direction, Format, Level } from "../types/filter";
 import { injectable } from "inversify";
 
 export interface FilterParamsProps {
-    readonly category: Category,
-    readonly direction: Direction,
-    readonly format: Format,
-    readonly level: Level,
-    readonly query: string,
-    readonly page: number
+    category: Category,
+    direction: Direction,
+    format: Format,
+    level: Level,
+    query: string,
+    page: number
 }
 
 export interface FilterParamsState {
@@ -29,7 +29,7 @@ export type FilterParamsService = FilterParamsState & FilterParamsActions
 
 @injectable()
 export default class FilterParams implements FilterParamsService {
-    state = {
+    state: FilterParamsProps = {
         category: Category.ALL,
         direction: Direction.ALL,
         format: Format.ALL,
@@ -46,55 +46,35 @@ export default class FilterParams implements FilterParamsService {
 
     setCategory = (category: Category) => {
         this.reset();
-        this.state = {
-            ...this.state,
-            category
-        }
+        this.state.category = category
     };
 
     setDirection = (direction: Direction) => {
-        this.state = {
-            ...this.state,
-            direction
-        }
+        this.state.direction = direction
     };
 
     setFormat = (format: Format) => {
-        this.state = {
-            ...this.state,
-            format
-        }
+        this.state.format = format
     }
 
     setLevel = (level: Level) => {
-        this.state = {
-            ...this.state,
-            level
-        }
+        this.state.level = level
     }
 
     setQuery = (query: string) => {
-        this.state = {
-            ...this.state,
-            query
-        }
+        this.state.query = query
     };
 
     setPage = (page: number) => {
-        this.state = {
-            ...this.state,
-            page
-        }
+        this.state.page = page
     };
 
     reset = () => {
-        this.state = {
-            category: Category.ALL,
-            direction: Direction.ALL,
-            format: Format.ALL,
-            level: Level.ANY,
-            query: '',
-            page: 1
-        }
+        this.state.category = Category.ALL
+        this.state.direction = Direction.ALL
+        this.state.format = Format.ALL
+        this.state.level = Level.ANY
+        this.state.query = ''
+        this.state.page = 1
     };
 }

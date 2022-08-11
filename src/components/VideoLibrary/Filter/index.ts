@@ -1,7 +1,9 @@
-import { connect } from "../../HOC/Injector";
-import { FilterView } from './FilterView'
+import { ComposeFunction, connect } from "../../HOC/Injector";
+import { FilterView, FilterViewProps } from "./FilterView";
 import { TYPES } from "../../../constants";
 import { Category, Direction, Format, Level } from "../../../types/filter";
+import { useDependency } from "../../../hooks/useDependency";
+import { action } from "mobx";
 
 export interface FilterParamsProps {
     readonly category: Category,
@@ -17,10 +19,10 @@ export interface FilterParamsState {
 }
 
 export interface FilterParamsActions {
-    readonly setCategory: (category: Category) => void
-    readonly setDirection: (direction: Direction) => void
-    readonly setFormat: (format: Format) => void
-    readonly setLevel: (level: Level) => void
+    readonly setCategory: (category: string) => void
+    readonly setDirection: (direction: string) => void
+    readonly setFormat: (format: string) => void
+    readonly setLevel: (level: string) => void
     readonly setQuery: (query: string) => void
     readonly setPage: (page: number) => void
     readonly reset: () => void
@@ -28,20 +30,30 @@ export interface FilterParamsActions {
 
 export type FilterParamsService = FilterParamsState & FilterParamsActions
 
-export const createFilterViewModel = (
-    filterParamsState: FilterParamsService,
-) => {
-    const { state } = filterParamsState
-    return {
-        category: state.category,
-        direction: state.direction,
-        format: state.format,
-        level: state.level,
-        onCategoryChange: filterParamsState.setCategory,
-        onDirectionChange: filterParamsState.setDirection,
-        onFormatChange: filterParamsState.setFormat,
-        onLevelChange: filterParamsState.setLevel,
-    }
+type Props = {}
+
+export function composeFilterViewModel(filterParamsState: FilterParamsService,): ComposeFunction<Props, FilterViewProps> {
+    return () => {
+        const { state } = filterParamsState
+
+        const onCategoryChange = action((e: string) => filterParamsState.setCategory(e))
+        const onDirectionChange = action((e: string) => filterParamsState.setDirection(e))
+        const onFormatChange = action((e: string) => filterParamsState.setFormat(e))
+        const onLevelChange = action((e: string) => filterParamsState.setLevel(e))
+
+        return {
+            props: filterParamsState.state,
+            actions: {
+                onCategoryChange,
+                onDirectionChange,
+                onFormatChange,
+                onLevelChange
+            }
+        };
+    };
 }
 
-export const Filter = connect(FilterView, TYPES.filterViewModel)
+const Filter = connect<Props, FilterViewProps>(FilterView, () => useDependency(TYPES.filterViewModel))
+export {
+    Filter
+}

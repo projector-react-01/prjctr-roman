@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Filter } from "../Filter";
 import { Video } from "../Video";
 
-interface LibraryViewProps {
+export interface LibraryViewProps {
     filter: () => void
     dispose: () => void
 }

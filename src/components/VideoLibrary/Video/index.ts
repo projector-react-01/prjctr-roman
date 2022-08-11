@@ -1,7 +1,9 @@
-import { connect } from "../../HOC/Injector";
+import { observable } from "mobx";
+import { ComposeFunction, connect } from "../../HOC/Injector";
 import { TYPES } from "../../../constants";
 
-import { VideoView } from "./VideoView";
+import { VideoView, VideoViewProps } from "./VideoView";
+import { useDependency } from "../../../hooks/useDependency";
 
 interface SearchResult {
     readonly data: string[]
@@ -18,10 +20,18 @@ interface FilterResultActions {
 
 type FilterResultService = FilterResultState & FilterResultActions
 
-export const createVideoViewModel = (filterResult: FilterResultService) => {
-    return {
-        result: filterResult.result
-    }
+type Props = {}
+
+export function composeVideoViewModel(filterResult: FilterResultService): ComposeFunction<Props, VideoViewProps> {
+    return () => {
+        return {
+            props: filterResult.result,
+            actions: {}
+        };
+    };
 }
 
-export const Video = connect(VideoView, TYPES.videoViewModel)
+const Video = connect<{}, SearchResult>(VideoView, () => useDependency(TYPES.videoViewModel))
+export {
+    Video
+}

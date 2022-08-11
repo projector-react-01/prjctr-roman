@@ -1,18 +1,32 @@
-import { connect } from "../../HOC/Injector";
+import { ComposeFunction, connect } from "../../HOC/Injector";
 
 import { TYPES } from "../../../constants";
-import { LibraryWrapper } from "./LibraryView";
+import { LibraryViewProps, LibraryWrapper } from "./LibraryView";
+import { useDependency } from "../../../hooks/useDependency";
+import { action } from "mobx";
 
 interface FilterService {
-    readonly filter: () => Promise<void>
+    readonly filter: () => void
     readonly dispose: () => void
 }
 
-export const createLibraryViewModel = (filterService: FilterService) => {
-    return {
-        filter: filterService.filter,
-        dispose: filterService.dispose
-    }
+type Props = {}
+
+export function composeLibraryViewModel(filterService: FilterService): ComposeFunction<Props, LibraryViewProps> {
+    return () => {
+        const filter = action(() => filterService.filter())
+        const dispose = action(() => filterService.dispose())
+        return {
+            props: {},
+            actions: {
+                filter,
+                dispose
+            }
+        };
+    };
 }
 
-export const Library = connect(LibraryWrapper, TYPES.filterService)
+const Library = connect<Props, LibraryViewProps>(LibraryWrapper, () => useDependency(TYPES.libraryViewModel))
+export {
+    Library
+}

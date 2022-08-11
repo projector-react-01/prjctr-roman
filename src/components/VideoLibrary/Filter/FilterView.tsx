@@ -3,7 +3,7 @@ import { useUIList } from "../../../contexts/lists";
 
 import { FilterSelector } from "../FilterSelector";
 
-type FilterViewProps = {
+export type FilterViewProps = {
     category: string
     direction: string
     format: string

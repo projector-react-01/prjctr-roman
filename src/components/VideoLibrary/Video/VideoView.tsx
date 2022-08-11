@@ -1,17 +1,14 @@
 import React from "react";
 
-interface VideoViewProps {
-    result: {
-        data: string[]
-        totalCount: number
-    }
+export interface VideoViewProps {
+    data: string[]
 }
 
 export const VideoView = (videoViewModel: VideoViewProps) => {
-    const { result } = videoViewModel
+    const { data } = videoViewModel
     return (
         <div>
-            Video Search State: {Object.values(result.data).join(', ')}
+            Video Search State: {Object.values(data).join(', ')}
         </div>
     );
 };

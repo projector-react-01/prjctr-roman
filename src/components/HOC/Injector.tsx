@@ -1,8 +1,5 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { useState } from "react";
-import Context from './Context'
-import { interfaces } from "inversify";
 
 type NonFunctionPropertyNames<T> = {
     [K in keyof T]: T[K] extends Function ? never : K;
@@ -25,31 +22,21 @@ export type ComposeFunction<P extends {}, VP extends {}> = (
     props: P
 ) => ComposeFunctionOutput<VP>;
 
-export function connect<P extends {}, VP extends {}, VM = {}>(
+export function connect<P extends {}, VP extends {}>(
     view: React.FC<VP>,
-    dependencyName: interfaces.ServiceIdentifier<VM>,
-    composeFunction?: ComposeFunction<P, VP>
+    viewModelProvider: () => (props: P) => ComposeFunctionOutput<VP>
 ): React.FC<P> {
     return observer((props) => {
-        const container = useContext(Context)
-        if (!container) {
-            throw Error('application must be wrapped with DI container')
-        }
-        const viewModelProps: VM = container.get(dependencyName)
-
-        if (typeof composeFunction !== 'function') {
-            return view(viewModelProps)
-        }
-
+        const dependency = viewModelProvider()
         const [{ props: viewProps, actions }] = useState(() =>
-            composeFunction(props)
+            dependency(props)
         );
         const [state] = useState(() => viewProps);
 
         const nextState = {
             ...state,
             ...actions
-        } as VP & VM;
+        } as VP;
 
         return view(nextState);
     });
